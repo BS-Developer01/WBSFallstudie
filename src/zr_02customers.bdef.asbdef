@@ -131,17 +131,6 @@ early numbering
   LocalLastChangedAt,
   LastChangedAt;
 
-  //    field ( readonly : update )
-  //      OrderId,
-  //      CustomerId;
-
-  // FIELD CONTROL: Lifecycle Constraints
-  // mandatory : create -> UI shows a red asterisk; record cannot be created without an ID.
-  // readonly : update  -> The ID becomes a 'Semantic Key'; once saved, it cannot be changed,
-  //                      ensuring data integrity for the order record.
-  //field ( mandatory : create, readonly : update ) OrderId;
-
-
   validation validateOrderData on save { create; field OrderId; }
   validation validateMatIdAndQuantity on save { create; update; field MaterialId, Quantity; }
 

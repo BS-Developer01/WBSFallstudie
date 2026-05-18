@@ -11,7 +11,8 @@ ENDCLASS.
 
 
 
-CLASS zcl_02_data_loader IMPLEMENTATION.
+CLASS ZCL_02_DATA_LOADER IMPLEMENTATION.
+
 
   METHOD if_oo_adt_classrun~main.
 *
@@ -32,7 +33,4 @@ CLASS zcl_02_data_loader IMPLEMENTATION.
     out->write( 'data_loader finished!' ).
 
   ENDMETHOD.
-
-
-
 ENDCLASS.

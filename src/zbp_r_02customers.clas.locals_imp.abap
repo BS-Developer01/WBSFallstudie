@@ -121,8 +121,6 @@ CLASS lhc_orders IMPLEMENTATION.
                                                    Currency = if_abap_behv=>mk-on )
                            ) TO lt_update.
           ENDIF.
-
-
         ENDIF.
       ELSE.
         " FALLBACK: If the user cleared the Material or Quantity,
@@ -170,6 +168,7 @@ CLASS lhc_orders IMPLEMENTATION.
 
     LOOP AT orders INTO DATA(order).
 
+      "------- Quantity prüfen.
       IF not order-Quantity > 0.
 
         failed_record-%tky = order-%tky.
@@ -181,6 +180,25 @@ CLASS lhc_orders IMPLEMENTATION.
              new_message(
                  id =  'Z02_ERRORTEXTS'
                  number = '005'
+                 severity = if_abap_behv_message=>severity-error
+                         ).
+
+        APPEND reported_record TO reported-orders.
+
+      ENDIF.
+
+      "----------- Status prüfen.
+      IF order-Status is initial.
+
+        failed_record-%tky = order-%tky.
+
+        APPEND failed_record TO failed-orders.
+
+        reported_record-%tky = order-%tky.
+        reported_record-%msg =
+             new_message(
+                 id =  'Z02_ERRORTEXTS'
+                 number = '007'
                  severity = if_abap_behv_message=>severity-error
                          ).
 
@@ -373,24 +391,6 @@ CLASS lhc_zr_02customers IMPLEMENTATION.
 
   ENDMETHOD.
 
-*  METHOD earlynumbering_create.
-*
-*DATA lv_Max TYPE N LENGTH 10.
-*SELECT max( cast( ) ) FROM ZR_02CUSTOMERS INTO lv_Max.
-*
-*
-*    LOOP AT entities INTO DATA(entity).
-*    DATA(NEW_ID) = '000001'.
-*    MODIFY ENTITIES OF ZR_02CUSTOMERS IN LOCAL MODE
-*    ENTITY Customers
-*    UPDATE FIELDS ( CustomerID )
-*    WITH VALUE #( (
-*      %tky = entity-%tky
-*      CustomerID = NEW_ID ) ).
-*
-*    ENDLOOP.
-*  ENDMETHOD.
-
   METHOD earlynumbering_cba_Orders.
 
     LOOP AT entities INTO DATA(entity).
@@ -413,7 +413,6 @@ CLASS lhc_zr_02customers IMPLEMENTATION.
             %key-OrderID = 'O' && lv_max
             )
         ).
-
 
     ENDLOOP.
 
